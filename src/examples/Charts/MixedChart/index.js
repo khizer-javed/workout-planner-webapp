@@ -205,7 +205,7 @@ function MixedChart({ icon, title, description, height, chart }) {
 
 // Setting default values for the props of MixedChart
 MixedChart.defaultProps = {
-  icon: { color: "info", component: "" },
+  icon: { color: "primary", component: "" },
   title: "",
   description: "",
   height: "19.125rem",

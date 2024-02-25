@@ -9,7 +9,6 @@ import { MaterialUIControllerProvider } from "context";
 const container = document.getElementById("app");
 const root = createRoot(container);
 
-console.log("herer");
 root.render(
   <BrowserRouter>
     <MaterialUIControllerProvider>

@@ -72,7 +72,7 @@ export default styled(Badge)(({ theme, ownerState }) => {
   const gradientStyles = (colorProp) => {
     const backgroundValue = gradients[colorProp]
       ? linearGradient(gradients[colorProp].main, gradients[colorProp].state)
-      : linearGradient(gradients.info.main, gradients.info.state);
+      : linearGradient(gradients.primary.main, gradients.primary.state);
     const colorValue = colorProp === "light" ? dark.main : white.main;
 
     return {
@@ -85,8 +85,10 @@ export default styled(Badge)(({ theme, ownerState }) => {
   const containedStyles = (colorProp) => {
     const backgroundValue = badgeColors[colorProp]
       ? badgeColors[colorProp].background
-      : badgeColors.info.background;
-    let colorValue = badgeColors[colorProp] ? badgeColors[colorProp].text : badgeColors.info.text;
+      : badgeColors.primary.background;
+    let colorValue = badgeColors[colorProp]
+      ? badgeColors[colorProp].text
+      : badgeColors.primary.text;
 
     if (colorProp === "light") {
       colorValue = dark.main;

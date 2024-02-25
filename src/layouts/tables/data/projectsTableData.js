@@ -75,7 +75,7 @@ export default function data() {
             working
           </MDTypography>
         ),
-        completion: <Progress color="info" value={60} />,
+        completion: <Progress color="primary" value={60} />,
         action: (
           <MDTypography component="a" href="#" color="text">
             <Icon>more_vert</Icon>
@@ -132,7 +132,7 @@ export default function data() {
             working
           </MDTypography>
         ),
-        completion: <Progress color="info" value={80} />,
+        completion: <Progress color="primary" value={80} />,
         action: (
           <MDTypography component="a" href="#" color="text">
             <Icon>more_vert</Icon>

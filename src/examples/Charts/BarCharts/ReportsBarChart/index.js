@@ -91,7 +91,7 @@ function ReportsBarChart({ color, title, description, date, chart }) {
 
 // Setting default values for the props of ReportsBarChart
 ReportsBarChart.defaultProps = {
-  color: "info",
+  color: "primary",
   description: "",
 };
 

@@ -109,7 +109,7 @@ function RadarChart({ icon, title, description, height, chart }) {
 
 // Setting default values for the props of RadarChart
 RadarChart.defaultProps = {
-  icon: { color: "info", component: "" },
+  icon: { color: "primary", component: "" },
   title: "",
   description: "",
 };

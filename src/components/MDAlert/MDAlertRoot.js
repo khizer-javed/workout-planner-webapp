@@ -29,7 +29,7 @@ export default styled(Box)(({ theme, ownerState }) => {
   // backgroundImage value
   const backgroundImageValue = gradients[color]
     ? linearGradient(gradients[color].main, gradients[color].state)
-    : linearGradient(gradients.info.main, gradients.info.state);
+    : linearGradient(gradients.primary.main, gradients.primary.state);
 
   return {
     display: "flex",

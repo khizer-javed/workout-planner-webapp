@@ -25,8 +25,8 @@ function configs(labels, datasets, cutout = 60) {
   if (datasets.backgroundColors) {
     datasets.backgroundColors.forEach((color) => {
       if (gradients[color]) {
-        if (color === "info") {
-          backgroundColors.push(gradients.info.main);
+        if (color === "primary") {
+          backgroundColors.push(gradients.primary.main);
         } else {
           backgroundColors.push(gradients[color].state);
         }

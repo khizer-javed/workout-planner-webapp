@@ -102,7 +102,7 @@ function ReportsLineChart({ color, title, description, date, chart }) {
 
 // Setting default values for the props of ReportsLineChart
 ReportsLineChart.defaultProps = {
-  color: "info",
+  color: "primary",
   description: "",
 };
 

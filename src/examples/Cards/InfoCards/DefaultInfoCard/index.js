@@ -66,7 +66,7 @@ function DefaultInfoCard({ color, icon, title, description, value }) {
 
 // Setting default values for the props of DefaultInfoCard
 DefaultInfoCard.defaultProps = {
-  color: "info",
+  color: "primary",
   value: "",
   description: "",
 };

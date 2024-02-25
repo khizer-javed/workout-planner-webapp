@@ -111,7 +111,7 @@ function HorizontalBarChart({ icon, title, description, height, chart }) {
 
 // Setting default values for the props of HorizontalBarChart
 HorizontalBarChart.defaultProps = {
-  icon: { color: "info", component: "" },
+  icon: { color: "primary", component: "" },
   title: "",
   description: "",
   height: "19.125rem",

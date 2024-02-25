@@ -75,7 +75,7 @@ function Header({ children }) {
         sx={{
           backgroundImage: ({ functions: { rgba, linearGradient }, palette: { gradients } }) =>
             `${linearGradient(
-              rgba(gradients.info.main, 0.6),
+              rgba(gradients.primary.main, 0.6),
               rgba(gradients.info.state, 0.6)
             )}, url(${backgroundImage})`,
           backgroundSize: "cover",

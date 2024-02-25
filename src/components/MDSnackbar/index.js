@@ -148,7 +148,7 @@ function MDSnackbar({ color, icon, title, dateTime, content, close, bgWhite, ...
 // Setting default values for the props of MDSnackbar
 MDSnackbar.defaultProps = {
   bgWhite: false,
-  color: "info",
+  color: "primary",
 };
 
 // Typechecking props for MDSnackbar

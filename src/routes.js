@@ -52,10 +52,10 @@ import Icon from "@mui/material/Icon";
 const routes = [
   {
     type: "collapse",
-    name: "Home",
-    key: "home",
-    icon: <Icon fontSize="small">home</Icon>,
-    route: "/",
+    name: "Workouts",
+    key: "workouts",
+    icon: <Icon fontSize="small">fitness_center</Icon>,
+    route: "/workouts",
     component: <Home />,
   },
   {

@@ -113,7 +113,7 @@ function ProgressLineChart({ color, icon, title, count, progress, height, chart 
 
 // Setting default values for the props of ProgressLineChart
 ProgressLineChart.defaultProps = {
-  color: "info",
+  color: "primary",
   count: 0,
   height: "6.25rem",
 };

@@ -86,7 +86,7 @@ function PolarChart({ icon, title, description, chart, height }) {
 
 // Setting default values for the props of PolarChart
 PolarChart.defaultProps = {
-  icon: { color: "info", component: "" },
+  icon: { color: "primary", component: "" },
   title: "",
   description: "",
 };

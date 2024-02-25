@@ -21,7 +21,7 @@ import boxShadows from "assets/theme/base/boxShadows";
 // Material Dashboard 2 React helper functions
 import pxToRem from "assets/theme/functions/pxToRem";
 
-const { grey, white, black, info } = colors;
+const { grey, white, black, primary } = colors;
 const { borderRadius, borderWidth } = borders;
 const { sliderBoxShadow } = boxShadows;
 
@@ -47,7 +47,7 @@ const slider = {
     },
 
     track: {
-      background: info.main,
+      background: primary.main,
       height: pxToRem(2),
       position: "relative",
       border: "none",
@@ -61,7 +61,7 @@ const slider = {
       backgroundColor: white.main,
       zIndex: 10,
       boxShadow: sliderBoxShadow.thumb,
-      border: `${borderWidth[1]} solid ${info.main}`,
+      border: `${borderWidth[1]} solid ${primary.main}`,
 
       "&:hover": {
         boxShadow: "none",

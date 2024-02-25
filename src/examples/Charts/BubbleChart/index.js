@@ -105,7 +105,7 @@ function BubbleChart({ icon, title, description, height, chart }) {
 
 // Setting default values for the props of BubbleChart
 BubbleChart.defaultProps = {
-  icon: { color: "info", component: "" },
+  icon: { color: "primary", component: "" },
   title: "",
   description: "",
   height: "100%",

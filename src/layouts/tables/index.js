@@ -48,9 +48,9 @@ function Tables() {
                 py={3}
                 px={2}
                 variant="gradient"
-                bgColor="info"
+                bgColor="primary"
                 borderRadius="lg"
-                coloredShadow="info"
+                coloredShadow="primary"
               >
                 <MDTypography variant="h6" color="white">
                   Authors Table
@@ -75,9 +75,9 @@ function Tables() {
                 py={3}
                 px={2}
                 variant="gradient"
-                bgColor="info"
+                bgColor="primary"
                 borderRadius="lg"
-                coloredShadow="info"
+                coloredShadow="primary"
               >
                 <MDTypography variant="h6" color="white">
                   Projects Table

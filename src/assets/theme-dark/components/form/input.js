@@ -21,7 +21,7 @@ import borders from "assets/theme-dark/base/borders";
 // Material Dashboard 2 React Helper Functions
 import rgba from "assets/theme-dark/functions/rgba";
 
-const { info, inputBorderColor, dark, grey, white } = colors;
+const { primary, inputBorderColor, dark, grey, white } = colors;
 const { size } = typography;
 const { borderWidth } = borders;
 
@@ -40,7 +40,7 @@ const input = {
       },
 
       "&:after": {
-        borderColor: info.main,
+        borderColor: primary.main,
       },
 
       input: {

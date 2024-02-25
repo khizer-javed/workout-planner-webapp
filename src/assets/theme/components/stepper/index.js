@@ -29,10 +29,10 @@ const { colored } = boxShadows;
 const stepper = {
   styleOverrides: {
     root: {
-      background: linearGradient(gradients.info.main, gradients.info.state),
+      background: linearGradient(gradients.primary.main, gradients.primary.state),
       padding: `${pxToRem(24)} 0 ${pxToRem(16)}`,
       borderRadius: borderRadius.lg,
-      boxShadow: colored.info,
+      boxShadow: colored.primary,
 
       "&.MuiPaper-root": {
         backgroundColor: transparent.main,

@@ -63,7 +63,7 @@ function MDAlert({ color, dismissible, children, ...rest }) {
 
 // Setting default values for the props of MDAlert
 MDAlert.defaultProps = {
-  color: "info",
+  color: "primary",
   dismissible: false,
 };
 

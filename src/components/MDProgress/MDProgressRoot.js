@@ -30,9 +30,9 @@ export default styled(LinearProgress)(({ theme, ownerState }) => {
   if (variant === "gradient") {
     backgroundValue = gradients[color]
       ? linearGradient(gradients[color].main, gradients[color].state)
-      : linearGradient(gradients.info.main, gradients.info.state);
+      : linearGradient(gradients.primary.main, gradients.primary.state);
   } else {
-    backgroundValue = palette[color] ? palette[color].main : palette.info.main;
+    backgroundValue = palette[color] ? palette[color].main : palette.primary.main;
   }
 
   return {

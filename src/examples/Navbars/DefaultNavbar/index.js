@@ -136,7 +136,7 @@ function DefaultNavbar({ transparent, light, action }) {
                 component={Link}
                 to={action.route}
                 variant="gradient"
-                color={action.color ? action.color : "info"}
+                color={action.color ? action.color : "primary"}
                 size="small"
               >
                 {action.label}
@@ -150,7 +150,7 @@ function DefaultNavbar({ transparent, light, action }) {
                 target="_blank"
                 rel="noreferrer"
                 variant="gradient"
-                color={action.color ? action.color : "info"}
+                color={action.color ? action.color : "primary"}
                 size="small"
                 sx={{ mt: -0.3 }}
               >

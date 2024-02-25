@@ -86,7 +86,7 @@ function DefaultDoughnutChart({ icon, title, description, height, chart }) {
 
 // Setting default values for the props of DefaultDoughnutChart
 DefaultDoughnutChart.defaultProps = {
-  icon: { color: "info", component: "" },
+  icon: { color: "primary", component: "" },
   title: "",
   description: "",
   height: "19.125rem",

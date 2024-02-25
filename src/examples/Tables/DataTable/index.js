@@ -239,7 +239,7 @@ function DataTable({
         {pageOptions.length > 1 && (
           <MDPagination
             variant={pagination.variant ? pagination.variant : "gradient"}
-            color={pagination.color ? pagination.color : "info"}
+            color={pagination.color ? pagination.color : "primary"}
           >
             {canPreviousPage && (
               <MDPagination item onClick={() => previousPage()}>
@@ -274,7 +274,7 @@ DataTable.defaultProps = {
   entriesPerPage: { defaultValue: 10, entries: [5, 10, 15, 20, 25] },
   canSearch: false,
   showTotalEntries: true,
-  pagination: { variant: "gradient", color: "info" },
+  pagination: { variant: "gradient", color: "primary" },
   isSorted: true,
   noEndBorder: false,
 };

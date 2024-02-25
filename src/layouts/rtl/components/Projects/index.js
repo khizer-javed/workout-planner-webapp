@@ -68,7 +68,7 @@ function Projects() {
             <Icon
               sx={{
                 fontWeight: "bold",
-                color: ({ palette: { info } }) => info.main,
+                color: ({ palette: { info } }) => primary.main,
                 mt: -0.5,
               }}
             >

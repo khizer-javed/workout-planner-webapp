@@ -28,7 +28,7 @@ export default [
     action: {
       type: "internal",
       route: "/pages/profile/profile-overview",
-      color: "info",
+      color: "primary",
       label: "reply",
     },
   },
@@ -39,7 +39,7 @@ export default [
     action: {
       type: "internal",
       route: "/pages/profile/profile-overview",
-      color: "info",
+      color: "primary",
       label: "reply",
     },
   },
@@ -50,7 +50,7 @@ export default [
     action: {
       type: "internal",
       route: "/pages/profile/profile-overview",
-      color: "info",
+      color: "primary",
       label: "reply",
     },
   },
@@ -61,7 +61,7 @@ export default [
     action: {
       type: "internal",
       route: "/pages/profile/profile-overview",
-      color: "info",
+      color: "primary",
       label: "reply",
     },
   },
@@ -72,7 +72,7 @@ export default [
     action: {
       type: "internal",
       route: "/pages/profile/profile-overview",
-      color: "info",
+      color: "primary",
       label: "reply",
     },
   },
