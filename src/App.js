@@ -52,6 +52,9 @@ import { useMaterialUIController, setMiniSidenav, setOpenConfigurator } from "co
 // Images
 import brandWhite from "assets/images/logo-ct.png";
 import brandDark from "assets/images/logo-ct-dark.png";
+import ProtectedRouteGuard from "guards/ProtectedRouteGuard";
+import PublicRouteGuard from "guards/PublicRouteGuard";
+import Exercises from "layouts/exercises";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -109,18 +112,50 @@ export default function App() {
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
 
-  const getRoutes = (allRoutes) =>
-    allRoutes.map((route) => {
-      if (route.collapse) {
-        return getRoutes(route.collapse);
-      }
+  const getRoutes = (allRoutes) => (
+    <>
+      <Route path="/" element={<ProtectedRouteGuard />}>
+        {allRoutes.protectedRoutes.map((route, index) => {
 
-      if (route.route) {
-        return <Route exact path={route.route} element={route.component} key={route.key} />;
-      }
+          if (route.collapse) {
+            return getRoutes(route.collapse);
+          }
 
-      return null;
-    });
+          if (route.route) {
+            return (
+              <Route
+                key={route.key}
+                path={route.route}
+                element={route.component}
+              />
+            )
+          }
+        })}
+      </Route>
+      <Route path="/:id/exercises" element={<Exercises />} />
+      <Route path="/" element={<PublicRouteGuard />}>
+        {allRoutes.publicRoutes.map((route) => (
+          <Route
+            key={route.key}
+            path={route.route}
+            element={route.component}
+          />
+        ))}
+      </Route>
+    </>
+  )
+
+  // allRoutes.map((route) => {
+  //   if (route.collapse) {
+  //     return getRoutes(route.collapse);
+  //   }
+
+  //   if (route.route) {
+  //     return <Route exact path={route.route} element={route.component} key={route.key} />;
+  //   }
+
+  //   return null;
+  // });
 
   const configsButton = (
     <MDBox
@@ -146,32 +181,57 @@ export default function App() {
     </MDBox>
   );
 
-  return direction === "rtl" ? (
-    <CacheProvider value={rtlCache}>
-      <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
-        <CssBaseline />
-        {layout === "dashboard" && (
-          <>
-            <Sidenav
-              color={sidenavColor}
-              brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-              brandName="Workout Planner"
-              routes={routes}
-              onMouseEnter={handleOnMouseEnter}
-              onMouseLeave={handleOnMouseLeave}
-            />
-            <Configurator />
-            {configsButton}
-          </>
-        )}
-        {layout === "vr" && <Configurator />}
-        <Routes>
-          {getRoutes(routes)}
-          <Route path="*" element={<Navigate to="/workouts" />} />
-        </Routes>
-      </ThemeProvider>
-    </CacheProvider>
-  ) : (
+  // return direction === "rtl" ? (
+  //   <CacheProvider value={rtlCache}>
+  //     <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
+  //       <CssBaseline />
+  //       {layout === "dashboard" && (
+  //         <>
+  //           <Sidenav
+  //             color={sidenavColor}
+  //             brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+  //             brandName="Workout Planner"
+  //             routes={routes}
+  //             onMouseEnter={handleOnMouseEnter}
+  //             onMouseLeave={handleOnMouseLeave}
+  //           />
+  //           <Configurator />
+  //           {configsButton}
+  //         </>
+  //       )}
+  //       {layout === "vr" && <Configurator />}
+  //       <Routes>
+  //         {getRoutes(routes)}
+  //         <Route path="*" element={<Navigate to="/workouts" />} />
+  //       </Routes>
+  //     </ThemeProvider>
+  //   </CacheProvider>
+  // ) : (
+  //   <ThemeProvider theme={darkMode ? themeDark : theme}>
+  //     <CssBaseline />
+  //     {layout === "dashboard" && (
+  //       <>
+  //         <Sidenav
+  //           color={sidenavColor}
+  //           brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
+  //           brandName="Workout Planner"
+  //           routes={routes}
+  //           onMouseEnter={handleOnMouseEnter}
+  //           onMouseLeave={handleOnMouseLeave}
+  //         />
+  //         <Configurator />
+  //         {configsButton}
+  //       </>
+  //     )}
+  //     {layout === "vr" && <Configurator />}
+  //     <Routes>
+  //       {getRoutes(routes)}
+  //       <Route path="*" element={<Navigate to="/workouts" />} />
+  //     </Routes>
+  //   </ThemeProvider>
+  // );
+
+  return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
       {layout === "dashboard" && (
@@ -180,7 +240,7 @@ export default function App() {
             color={sidenavColor}
             brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
             brandName="Workout Planner"
-            routes={routes}
+            routes={routes.protectedRoutes}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           />
@@ -191,8 +251,8 @@ export default function App() {
       {layout === "vr" && <Configurator />}
       <Routes>
         {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/workouts" />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </ThemeProvider>
-  );
+  )
 }
