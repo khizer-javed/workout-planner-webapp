@@ -22,7 +22,7 @@ const protectedRoutes = [
     icon: <Icon fontSize="small">fitness_center</Icon>,
     route: "/workouts",
     links: ['workouts', 'exercises'],
-    component: lazy(() => import('layouts/workouts'))
+    component: lazy(() => import('layouts/workouts/index.js'))
   },
   // {
   //   type: "collapse",
@@ -89,7 +89,7 @@ const publicRoutes = [
     key: "sign-in",
     icon: <Icon fontSize="small">login</Icon>,
     route: "/sign-in",
-    component: lazy(() => import('layouts/authentication/sign-in'))
+    component: lazy(() => import('layouts/authentication/sign-in/index.js'))
   },
 
 ]

@@ -58,7 +58,7 @@ import Exercises from "layouts/exercises";
 import NotFound from "layouts/not-found";
 import Loading from "components/MDLoader";
 
-export default function App() {
+const AllRoutes = () => {
   const [controller, dispatch] = useMaterialUIController();
   const {
     miniSidenav,
@@ -122,6 +122,8 @@ export default function App() {
       <Route path="/" element={<ProtectedRouteGuard />}>
         {allRoutes.protectedRoutes.map((route, index) => {
 
+          const { component: Component } = route
+
           if (route.collapse) {
             return getRoutes(route.collapse);
           }
@@ -131,20 +133,24 @@ export default function App() {
               <Route
                 key={route.key}
                 path={route.route}
-                element={route.component}
+                element={<Component />}
               />
             )
           }
         })}
       </Route>
       <Route path="/" element={<PublicRouteGuard />}>
-        {allRoutes.publicRoutes.map((route) => (
-          <Route
-            key={route.key}
-            path={route.route}
-            element={route.component}
-          />
-        ))}
+        {allRoutes.publicRoutes.map((route) => {
+
+          const { component: Component } = route
+          return (
+            <Route
+              key={route.key}
+              path={route.route}
+              element={<Component />}
+            />
+          )
+        })}
       </Route>
       <Route path="/:id/exercises" element={<Exercises />} />
     </>
@@ -255,16 +261,24 @@ export default function App() {
       )}
       {layout === "vr" && <Configurator />}
 
-      <Suspense fallback={<Loading loading />}>
-        <Routes>
-          {authenticated ? (
-            <Route path="/" element={<Navigate replace to={entryPath} />} />
-          ) : null}
-          {getRoutes(routes)}
+      <Routes>
+        {authenticated ? (
+          <Route path="/" element={<Navigate replace to={entryPath} />} />
+        ) : null}
+        {getRoutes(routes)}
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Suspense>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </ThemeProvider>
+
   )
 }
+
+
+const App = () => (
+  <Suspense fallback={<Loading loading />}>
+    <AllRoutes />
+  </Suspense>
+)
+
+export default App

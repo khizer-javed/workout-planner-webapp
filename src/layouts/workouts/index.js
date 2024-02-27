@@ -24,11 +24,9 @@ import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 
-// Data
-import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
-
 // Home components
 import { Card, CardContent, CardMedia, Link, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const workouts = [
   {
@@ -54,10 +52,15 @@ const workouts = [
     title: 'Shoulder',
     description: 'Upper body push and pull exercises',
     thumbnail: '/img/shoulder-1.png'
-  },]
+  },
+]
 
-function Workouts() {
-  const { sales, tasks } = reportsLineChartData;
+const Workouts = () => {
+  const navigate = useNavigate()
+
+  const gotoExercises = (id) => {
+    navigate(`/${id}/exercises`)
+  }
 
   return (
     <DashboardLayout>
@@ -66,14 +69,12 @@ function Workouts() {
         <Grid container spacing={3}>
           {workouts.map(row => (
             <Grid key={row.id} item xs={12} md={6} lg={3}>
-              <Link href={`/${row.id}/exercises`} underline="none">
+              <Link onClick={() => gotoExercises(row.id)} underline="none">
                 <MDBox mb={1.5}>
                   <Card style={{ cursor: 'pointer' }}>
-                    <CardMedia
-                      component="img"
-                      alt="green iguana"
-                      image={row.thumbnail}
-                    />
+                    <div className='flex justify-center p-4 pb-0'>
+                      <img src={row.thumbnail} className="w-1/2" />
+                    </div>
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="div">
                         {row.title}
