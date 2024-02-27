@@ -1,19 +1,3 @@
-/**
-=========================================================
-* Material Home 2 React - v2.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2023 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
-// @mui material components
 import Grid from "@mui/material/Grid";
 
 // Material Home 2 React components
@@ -31,48 +15,48 @@ import { useNavigate } from "react-router-dom";
 const workouts = [
   {
     id: 1,
-    title: 'Chest',
-    description: 'Upper body push and pull exercises',
-    thumbnail: '/img/chest-1.png'
+    title: "Chest",
+    description: "Upper body push and pull exercises",
+    thumbnail: "/img/chest-1.png",
   },
   {
     id: 2,
-    title: 'Legs',
-    description: 'Lower body push exercises',
-    thumbnail: '/img/legs-1.png'
+    title: "Legs",
+    description: "Lower body push exercises",
+    thumbnail: "/img/legs-1.png",
   },
   {
     id: 3,
-    title: 'Arms',
-    description: 'Lower body push and pull exercises',
-    thumbnail: '/img/arms-1.png'
+    title: "Arms",
+    description: "Lower body push and pull exercises",
+    thumbnail: "/img/arms-1.png",
   },
   {
     id: 4,
-    title: 'Shoulder',
-    description: 'Upper body push and pull exercises',
-    thumbnail: '/img/shoulder-1.png'
+    title: "Shoulder",
+    description: "Upper body push and pull exercises",
+    thumbnail: "/img/shoulder-1.png",
   },
-]
+];
 
 const Workouts = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const gotoExercises = (id) => {
-    navigate(`/${id}/exercises`)
-  }
+    navigate(`/${id}/exercises`);
+  };
 
   return (
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
         <Grid container spacing={3}>
-          {workouts.map(row => (
+          {workouts.map((row) => (
             <Grid key={row.id} item xs={12} md={6} lg={3}>
               <Link onClick={() => gotoExercises(row.id)} underline="none">
                 <MDBox mb={1.5}>
-                  <Card style={{ cursor: 'pointer' }}>
-                    <div className='flex justify-center p-4 pb-0'>
+                  <Card style={{ cursor: "pointer" }}>
+                    <div className="flex justify-center p-4 pb-0">
                       <img src={row.thumbnail} className="w-1/2" />
                     </div>
                     <CardContent>
@@ -87,8 +71,7 @@ const Workouts = () => {
                 </MDBox>
               </Link>
             </Grid>
-          ))
-          }
+          ))}
           {/* <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
@@ -204,6 +187,6 @@ const Workouts = () => {
       <Footer />
     </DashboardLayout>
   );
-}
+};
 
 export default Workouts;

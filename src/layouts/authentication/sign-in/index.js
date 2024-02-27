@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import { useState } from "react";
 
 // react-router-dom components
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // @mui material components
 import Card from "@mui/material/Card";
@@ -43,8 +43,14 @@ import bgImage from "assets/images/basic-bg.jpg";
 
 function Basic() {
   const [rememberMe, setRememberMe] = useState(false);
+  const navigate = useNavigate();
 
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
+
+  const handleSignin = () => {
+    localStorage.setItem("TOKEN", "asd");
+    navigate("/");
+  };
 
   return (
     <BasicLayout image={bgImage}>
@@ -102,7 +108,7 @@ function Basic() {
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="primary" fullWidth>
+              <MDButton variant="gradient" color="primary" fullWidth onClick={handleSignin}>
                 sign in
               </MDButton>
             </MDBox>
