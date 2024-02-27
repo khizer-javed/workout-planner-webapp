@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 
 // react-router components
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
@@ -55,6 +55,8 @@ import brandDark from "assets/images/logo-ct-dark.png";
 import ProtectedRouteGuard from "guards/ProtectedRouteGuard";
 import PublicRouteGuard from "guards/PublicRouteGuard";
 import Exercises from "layouts/exercises";
+import NotFound from "layouts/not-found";
+import Loading from "components/MDLoader";
 
 export default function App() {
   const [controller, dispatch] = useMaterialUIController();
@@ -71,6 +73,9 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
+
+  const authenticated = !!localStorage.getItem('TOKEN')
+  const entryPath = authenticated ? '/sign-in' : '/workouts'
 
   // Cache for the rtl
   useMemo(() => {
@@ -132,7 +137,6 @@ export default function App() {
           }
         })}
       </Route>
-      <Route path="/:id/exercises" element={<Exercises />} />
       <Route path="/" element={<PublicRouteGuard />}>
         {allRoutes.publicRoutes.map((route) => (
           <Route
@@ -142,6 +146,7 @@ export default function App() {
           />
         ))}
       </Route>
+      <Route path="/:id/exercises" element={<Exercises />} />
     </>
   )
 
@@ -249,10 +254,17 @@ export default function App() {
         </>
       )}
       {layout === "vr" && <Configurator />}
-      <Routes>
-        {getRoutes(routes)}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+
+      <Suspense fallback={<Loading loading />}>
+        <Routes>
+          {authenticated ? (
+            <Route path="/" element={<Navigate replace to={entryPath} />} />
+          ) : null}
+          {getRoutes(routes)}
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </ThemeProvider>
   )
 }

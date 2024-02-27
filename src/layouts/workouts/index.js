@@ -56,7 +56,7 @@ const workouts = [
     thumbnail: '/img/shoulder-1.png'
   },]
 
-function Home() {
+function Workouts() {
   const { sales, tasks } = reportsLineChartData;
 
   return (
@@ -65,7 +65,7 @@ function Home() {
       <MDBox py={3}>
         <Grid container spacing={3}>
           {workouts.map(row => (
-            <Grid item xs={12} md={6} lg={3}>
+            <Grid key={row.id} item xs={12} md={6} lg={3}>
               <Link href={`/${row.id}/exercises`} underline="none">
                 <MDBox mb={1.5}>
                   <Card style={{ cursor: 'pointer' }}>
@@ -205,4 +205,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default Workouts;
