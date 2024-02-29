@@ -1,4 +1,4 @@
-import { CardContent, Grid, Icon, Paper, Typography } from "@mui/material";
+import { Card, CardContent, Grid, Icon, Paper, Typography } from "@mui/material";
 import MDBox from "components/MDBox";
 import Footer from "examples/Footer";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
@@ -15,18 +15,21 @@ const exercises = [
     title: "Inclined Bench Press",
     description: "Upper body push and pull exercises",
     thumbnail: "/img/chest-1.png",
+    draggable: true
   },
   {
     id: 2,
     title: "Push ups",
     description: "Upper body push and pull exercises",
     thumbnail: "/img/chest-2.png",
+    draggable: true
   },
   {
     id: 3,
     title: "Clap Push ups",
     description: "Upper body push and pull exercises",
     thumbnail: "/img/chest-3.png",
+    draggable: true
   },
 ];
 
@@ -36,24 +39,28 @@ const selectedExercises = [
     title: "Dumbell Bench Flys",
     description: "Upper body push and pull exercises",
     thumbnail: "/img/chest-4.png",
+    draggable: true
   },
   {
     id: 5,
     title: "Bench Press",
     description: "Upper body push and pull exercises",
     thumbnail: "/img/chest-5.png",
+    draggable: true
   },
   {
     id: 6,
     title: "Dumbell Bench Press",
     description: "Upper body push and pull exercises",
     thumbnail: "/img/chest-6.png",
+    draggable: true
   },
   {
     id: 7,
     title: "Dumbell Flys",
     description: "Upper body push and pull exercises",
     thumbnail: "/img/chest-7.png",
+    draggable: true
   },
 ];
 
@@ -86,39 +93,46 @@ const Exercises = () => {
 
       <MDBox py={3}>
         <GridContextProvider onChange={onChange}>
-          <div className="container canvas grid grid-cols-6 gap-4">
+          <div className="flex gap-4 w-full h-[600px] overflow-auto py-4">
             <GridDropZone
-              className="dropzone left col-span-5"
+              className="w-[70%]"
               id="left"
               boxesPerRow={3}
-              rowHeight={200}
+              rowHeight={220}
             >
-              {items.left.map((item) => (
-                <GridItem key={item.id} className="grid justify-center">
-                  <div className="grid-item">
-                    <div className="grid-item-content relative">
-                      <div className="absolute z-50 right-0 left-0 top-0 bottom-0"></div>
-                      <img src={item.thumbnail} />
+              {items.left.map((item, index) => (
+                <GridItem key={item.id} className="grid justify-start">
+                  <Card className="w-[200px] h-[200px] relative">
+                    <div className="absolute z-50 right-0 left-0 top-0 bottom-0"></div>
+
+                    <div className="flex flex-col justify-between h-full">
+
+                      <div className="text-sm flex items-center gap-2 p-2">
+                        <b>{index + 1}.</b>
+                        <b>{item.title}</b>
+                      </div>
+
+                      <div className="grid justify-center items-center pb-2">
+                        <img src={item.thumbnail} className="h-[150px] w-fit" />
+                      </div>
                     </div>
-                  </div>
+                  </Card>
                 </GridItem>
               ))}
             </GridDropZone>
             <GridDropZone
-              className="dropzone right col-span-1"
+              className="w-[30%]"
               id="right"
               boxesPerRow={1}
-              rowHeight={180}
-              // style={{ overflowY: "auto", overflowX: "hidden" }}
+              rowHeight={220}
+            // style={{ overflowY: "auto", overflowX: "hidden" }}
             >
               {items.right.map((item) => (
-                <GridItem key={item.id} className="grid justify-center">
-                  <div className="grid-item">
-                    <div className="grid-item-content relative">
-                      <div className="absolute z-50 right-0 left-0 top-0 bottom-0"></div>
-                      <img src={item.thumbnail} />
-                    </div>
-                  </div>
+                <GridItem key={item.id} className="grid justify-end">
+                  <Card className="w-[200px] h-[200px] relative">
+                    <div className="absolute z-50 right-0 left-0 top-0 bottom-0"></div>
+                    <img src={item.thumbnail} />
+                  </Card>
                 </GridItem>
               ))}
             </GridDropZone>
