@@ -60,7 +60,7 @@ function MDSnackbar({ color, icon, title, dateTime, content, close, bgWhite, ...
       TransitionComponent={Fade}
       autoHideDuration={5000}
       anchorOrigin={{
-        vertical: "bottom",
+        vertical: "top",
         horizontal: "right",
       }}
       {...rest}
@@ -107,19 +107,21 @@ function MDSnackbar({ color, icon, title, dateTime, content, close, bgWhite, ...
             <MDTypography variant="caption" color={dateTimeColor}>
               {dateTime}
             </MDTypography>
-            <Icon
-              sx={{
-                color: ({ palette: { dark, white } }) =>
-                  (bgWhite && !darkMode) || color === "light" ? dark.main : white.main,
-                fontWeight: ({ typography: { fontWeightBold } }) => fontWeightBold,
-                cursor: "pointer",
-                marginLeft: 2,
-                transform: "translateY(-1px)",
-              }}
-              onClick={close}
-            >
-              close
-            </Icon>
+            {close && (
+              <Icon
+                sx={{
+                  color: ({ palette: { dark, white } }) =>
+                    (bgWhite && !darkMode) || color === "light" ? dark.main : white.main,
+                  fontWeight: ({ typography: { fontWeightBold } }) => fontWeightBold,
+                  cursor: "pointer",
+                  marginLeft: 2,
+                  transform: "translateY(-1px)",
+                }}
+                onClick={close}
+              >
+                close
+              </Icon>
+            )}
           </MDBox>
         </MDBox>
         <Divider sx={{ margin: 0 }} light={dividerColor} />

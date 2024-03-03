@@ -57,6 +57,7 @@ import PublicRouteGuard from "guards/PublicRouteGuard";
 import Exercises from "layouts/exercises";
 import NotFound from "layouts/not-found";
 import Loading from "components/MDLoader";
+import { TOKEN } from "constants";
 
 const AllRoutes = () => {
   const [controller, dispatch] = useMaterialUIController();
@@ -69,13 +70,14 @@ const AllRoutes = () => {
     transparentSidenav,
     whiteSidenav,
     darkMode,
+    toast,
   } = controller;
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
 
-  const authenticated = !!localStorage.getItem('TOKEN')
-  const entryPath = authenticated ? '/sign-in' : '/workouts'
+  const authenticated = !!localStorage.getItem(TOKEN);
+  const entryPath = authenticated ? "/sign-in" : "/workouts";
 
   // Cache for the rtl
   useMemo(() => {
@@ -121,40 +123,26 @@ const AllRoutes = () => {
     <>
       <Route path="/" element={<ProtectedRouteGuard />}>
         {allRoutes.protectedRoutes.map((route, index) => {
-
-          const { component: Component } = route
+          const { component: Component } = route;
 
           if (route.collapse) {
             return getRoutes(route.collapse);
           }
 
           if (route.route) {
-            return (
-              <Route
-                key={route.key}
-                path={route.route}
-                element={<Component />}
-              />
-            )
+            return <Route key={route.key} path={route.route} element={<Component />} />;
           }
         })}
       </Route>
       <Route path="/" element={<PublicRouteGuard />}>
         {allRoutes.publicRoutes.map((route) => {
-
-          const { component: Component } = route
-          return (
-            <Route
-              key={route.key}
-              path={route.route}
-              element={<Component />}
-            />
-          )
+          const { component: Component } = route;
+          return <Route key={route.key} path={route.route} element={<Component />} />;
         })}
       </Route>
-      <Route path="/:id/exercises" element={<Exercises />} />
+      <Route path="/exercises/:workoutId" element={<Exercises />} />
     </>
-  )
+  );
 
   // allRoutes.map((route) => {
   //   if (route.collapse) {
@@ -192,59 +180,10 @@ const AllRoutes = () => {
     </MDBox>
   );
 
-  // return direction === "rtl" ? (
-  //   <CacheProvider value={rtlCache}>
-  //     <ThemeProvider theme={darkMode ? themeDarkRTL : themeRTL}>
-  //       <CssBaseline />
-  //       {layout === "dashboard" && (
-  //         <>
-  //           <Sidenav
-  //             color={sidenavColor}
-  //             brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-  //             brandName="Workout Planner"
-  //             routes={routes}
-  //             onMouseEnter={handleOnMouseEnter}
-  //             onMouseLeave={handleOnMouseLeave}
-  //           />
-  //           <Configurator />
-  //           {configsButton}
-  //         </>
-  //       )}
-  //       {layout === "vr" && <Configurator />}
-  //       <Routes>
-  //         {getRoutes(routes)}
-  //         <Route path="*" element={<Navigate to="/workouts" />} />
-  //       </Routes>
-  //     </ThemeProvider>
-  //   </CacheProvider>
-  // ) : (
-  //   <ThemeProvider theme={darkMode ? themeDark : theme}>
-  //     <CssBaseline />
-  //     {layout === "dashboard" && (
-  //       <>
-  //         <Sidenav
-  //           color={sidenavColor}
-  //           brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
-  //           brandName="Workout Planner"
-  //           routes={routes}
-  //           onMouseEnter={handleOnMouseEnter}
-  //           onMouseLeave={handleOnMouseLeave}
-  //         />
-  //         <Configurator />
-  //         {configsButton}
-  //       </>
-  //     )}
-  //     {layout === "vr" && <Configurator />}
-  //     <Routes>
-  //       {getRoutes(routes)}
-  //       <Route path="*" element={<Navigate to="/workouts" />} />
-  //     </Routes>
-  //   </ThemeProvider>
-  // );
-
   return (
     <ThemeProvider theme={darkMode ? themeDark : theme}>
       <CssBaseline />
+      {toast?.map?.((row) => row)}
       {layout === "dashboard" && (
         <>
           <Sidenav
@@ -262,23 +201,19 @@ const AllRoutes = () => {
       {layout === "vr" && <Configurator />}
 
       <Routes>
-        {authenticated ? (
-          <Route path="/" element={<Navigate replace to={entryPath} />} />
-        ) : null}
+        {authenticated ? <Route path="/" element={<Navigate replace to={entryPath} />} /> : null}
         {getRoutes(routes)}
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </ThemeProvider>
-
-  )
-}
-
+  );
+};
 
 const App = () => (
   <Suspense fallback={<Loading loading />}>
     <AllRoutes />
   </Suspense>
-)
+);
 
-export default App
+export default App;

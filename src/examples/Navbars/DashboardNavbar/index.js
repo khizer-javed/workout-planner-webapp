@@ -52,15 +52,20 @@ import {
   setMiniSidenav,
   setOpenConfigurator,
 } from "context";
-import { Card, Divider } from "@mui/material";
+import { Button, Card, Divider } from "@mui/material";
+import { TOKEN } from "constants";
+import { userSignOut } from "services/auth";
+import MDButton from "components/MDButton";
+import { LOGGED_IN_USER } from "constants";
 
-function DashboardNavbar({ absolute, light, isMini }) {
+function DashboardNavbar({ absolute, light, isMini, onAddNew }) {
+  const loggedInUser = JSON.parse(localStorage.getItem(LOGGED_IN_USER));
   const [navbarType, setNavbarType] = useState();
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentNavbar, fixedNavbar, openConfigurator, darkMode } = controller;
   const [openMenu, setOpenMenu] = useState(false);
   const route = useLocation().pathname.split("/").slice(1);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Setting the navbar type
@@ -92,10 +97,13 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const handleConfiguratorOpen = () => setOpenConfigurator(dispatch, !openConfigurator);
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
-  const handleSignout = () => {
-    localStorage.removeItem("TOKEN")
-    navigate('/sign-in')
-  }
+
+  const handleSignout = async () => {
+    await userSignOut();
+    localStorage.removeItem(TOKEN);
+    localStorage.removeItem(LOGGED_IN_USER);
+    navigate("/sign-in");
+  };
 
   // Render the notifications menu
   const renderMenu = () => (
@@ -110,8 +118,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-      <NotificationItem icon={<Icon>person</Icon>} title="Nick Admin" />
-      <NotificationItem icon={<Icon>email</Icon>} title="nick123@gmail.com" />
+      <NotificationItem icon={<Icon>person</Icon>} title={loggedInUser.username} />
+      <NotificationItem icon={<Icon>email</Icon>} title={loggedInUser.email} />
       <Divider />
       <NotificationItem icon={<Icon>logout</Icon>} title="Sign out" onClick={handleSignout} />
     </Menu>
@@ -130,6 +138,12 @@ function DashboardNavbar({ absolute, light, isMini }) {
     },
   });
 
+  const handleAddNew = (e) => {
+    if (onAddNew) {
+      onAddNew(e);
+    }
+  };
+
   return (
     <AppBar
       position={absolute ? "absolute" : navbarType}
@@ -144,6 +158,11 @@ function DashboardNavbar({ absolute, light, isMini }) {
           {isMini ? null : (
             <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
               <MDBox color={light ? "white" : "inherit"}>
+                {!!onAddNew && (
+                  <MDButton size="small" variant="outlined" color="primary" onClick={handleAddNew}>
+                    <Icon>add</Icon>&nbsp;Add New
+                  </MDButton>
+                )}
                 <IconButton
                   size="medium"
                   disableRipple
@@ -165,22 +184,15 @@ function DashboardNavbar({ absolute, light, isMini }) {
                   <Icon sx={iconsStyle}>settings</Icon>
                 </IconButton>
 
-                <IconButton sx={navbarIconButton} size="medium" disableRipple
-                  onClick={handleOpenMenu}>
+                <IconButton
+                  sx={navbarIconButton}
+                  size="medium"
+                  disableRipple
+                  onClick={handleOpenMenu}
+                >
                   <Icon sx={iconsStyle}>account_circle</Icon>
                 </IconButton>
                 {renderMenu()}
-                {/* <IconButton
-                size="small"
-                disableRipple
-                color="inherit"
-                sx={navbarIconButton}
-                aria-controls="notification-menu"
-                aria-haspopup="true"
-                variant="contained"
-              >
-                <Icon sx={iconsStyle}>notifications</Icon>
-              </IconButton> */}
               </MDBox>
             </MDBox>
           )}

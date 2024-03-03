@@ -1,189 +1,44 @@
-import Grid from "@mui/material/Grid";
-
-// Material Home 2 React components
-import MDBox from "components/MDBox";
-
 // Material Home 2 React example components
+import Footer from "examples/Footer";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
 
 // Home components
-import { Card, CardContent, CardMedia, Link, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-
-const workouts = [
-  {
-    id: 1,
-    title: "Chest",
-    description: "Upper body push and pull exercises",
-    thumbnail: "/img/chest-1.png",
-  },
-  {
-    id: 2,
-    title: "Legs",
-    description: "Lower body push exercises",
-    thumbnail: "/img/legs-1.png",
-  },
-  {
-    id: 3,
-    title: "Arms",
-    description: "Lower body push and pull exercises",
-    thumbnail: "/img/arms-1.png",
-  },
-  {
-    id: 4,
-    title: "Shoulder",
-    description: "Upper body push and pull exercises",
-    thumbnail: "/img/shoulder-1.png",
-  },
-];
+import { useEffect, useState } from "react";
+import WorkoutForm from "./form";
+import WorkoutList from "./list";
 
 const Workouts = () => {
-  const navigate = useNavigate();
+  const [openWorkoutForm, setOpenWorkoutForm] = useState(false);
+  const [selectedWorkout, setSelectedWorkout] = useState({});
+  const [getData, setGetData] = useState(false);
 
-  const gotoExercises = (id) => {
-    navigate(`/${id}/exercises`);
+  useEffect(() => {
+    if (getData) {
+      setTimeout(() => {
+        setGetData(false);
+      }, 300);
+    }
+  }, [getData]);
+
+  const handleOpenWorkoutForm = (workout) => {
+    setOpenWorkoutForm(true);
+    if (workout) {
+      setSelectedWorkout(workout);
+    }
+  };
+
+  const closeWorkoutForm = () => {
+    setOpenWorkoutForm(false);
+    setGetData(true);
+    setSelectedWorkout({});
   };
 
   return (
     <DashboardLayout>
-      <DashboardNavbar />
-      <MDBox py={3}>
-        <Grid container spacing={3}>
-          {workouts.map((row) => (
-            <Grid key={row.id} item xs={12} md={6} lg={3}>
-              <Link onClick={() => gotoExercises(row.id)} underline="none">
-                <MDBox mb={1.5}>
-                  <Card style={{ cursor: "pointer" }}>
-                    <div className="flex justify-center p-4 pb-0">
-                      <img src={row.thumbnail} className="w-1/2" />
-                    </div>
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="div">
-                        {row.title}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {row.description}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </MDBox>
-              </Link>
-            </Grid>
-          ))}
-          {/* <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="dark"
-                icon="weekend"
-                title="Bookings"
-                count={281}
-                percentage={{
-                  color: "success",
-                  amount: "+55%",
-                  label: "than lask week",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                icon="leaderboard"
-                title="Today's Users"
-                count="2,300"
-                percentage={{
-                  color: "success",
-                  amount: "+3%",
-                  label: "than last month",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="success"
-                icon="store"
-                title="Revenue"
-                count="34k"
-                percentage={{
-                  color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
-                }}
-              />
-            </MDBox>
-          </Grid>
-          <Grid item xs={12} md={6} lg={3}>
-            <MDBox mb={1.5}>
-              <ComplexStatisticsCard
-                color="primary"
-                icon="person_add"
-                title="Followers"
-                count="+91"
-                percentage={{
-                  color: "success",
-                  amount: "",
-                  label: "Just updated",
-                }}
-              />
-            </MDBox>
-          </Grid> */}
-        </Grid>
-        {/* <MDBox mt={4.5}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsBarChart
-                  color="info"
-                  title="website views"
-                  description="Last Campaign Performance"
-                  date="campaign sent 2 days ago"
-                  chart={reportsBarChartData}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="success"
-                  title="daily sales"
-                  description={
-                    <>
-                      (<strong>+15%</strong>) increase in today sales.
-                    </>
-                  }
-                  date="updated 4 min ago"
-                  chart={sales}
-                />
-              </MDBox>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <MDBox mb={3}>
-                <ReportsLineChart
-                  color="dark"
-                  title="completed tasks"
-                  description="Last Campaign Performance"
-                  date="just updated"
-                  chart={tasks}
-                />
-              </MDBox>
-            </Grid>
-          </Grid>
-        </MDBox>
-        <MDBox>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={8}>
-              <Projects />
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <OrdersOverview />
-            </Grid>
-          </Grid>
-        </MDBox> */}
-      </MDBox>
+      <DashboardNavbar onAddNew={handleOpenWorkoutForm} />
+      <WorkoutForm open={openWorkoutForm} workout={selectedWorkout} onClose={closeWorkoutForm} />
+      <WorkoutList getData={getData} onOpen={handleOpenWorkoutForm} />
       <Footer />
     </DashboardLayout>
   );
