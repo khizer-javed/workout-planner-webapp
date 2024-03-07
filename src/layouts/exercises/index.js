@@ -181,26 +181,26 @@ const Exercises = () => {
         </div>
         {!noExercises && (
           <GridContextProvider onChange={onChange}>
-            <div className="flex gap-4 w-full py-4 h-[620px] overflow-y-auto">
+            <div className="flex gap-4 w-full h-[580px] overflow-y-hidden">
               <GridDropZone
-                className="border border-gray-300 rounded-lg bg-white w-[70%] p-4"
+                className="bg-white border border-gray-300 grid justify-center p-4 rounded-lg w-[83%]"
                 id="left"
                 boxesPerRow={3}
-                rowHeight={220}
+                rowHeight={185}
               >
                 {items.left.map((item, index) => (
-                  <GridItem key={item.id} className="grid justify-start w-auto">
-                    <Paper variant="outlined" className="w-[200px] h-[200px] relative shadow-lg">
+                  <GridItem key={item.id} className="grid justify-center p-4" >
+                    <Paper variant="outlined" className="w-[170px] h-[170px] relative shadow-lg">
                       <div className="absolute z-50 right-0 left-0 top-0 bottom-0"></div>
 
                       <div className="flex flex-col justify-between h-full">
                         <div className="text-sm flex items-center gap-2 p-2">
                           <b>{index + 1}.</b>
-                          <b>{item.title}</b>
+                          <b className="text-xs">{item.title}</b>
                         </div>
 
                         <div className="grid justify-center items-center pb-2">
-                          <img src={item.thumbnail} className="h-[150px] w-fit" />
+                          <img src={item.thumbnail} className="h-[120px] w-fit" />
                         </div>
                       </div>
                     </Paper>
@@ -208,15 +208,15 @@ const Exercises = () => {
                 ))}
               </GridDropZone>
               <GridDropZone
-                className="bg-white border border-gray-300 flex flex-col items-center p-4 rounded-lg w-[30%] relative"
+                className="flex flex-col items-center rounded-lg w-[17%] relative overflow-y-auto"
                 id="right"
                 boxesPerRow={1}
-                rowHeight={220}
-                // style={{ overflowY: "auto", overflowX: "hidden" }}
+                rowHeight={185}
+              // style={{ overflowY: "auto", overflowX: "hidden" }}
               >
                 {items.right.map((item) => (
                   <GridItem key={item.id} className="grid justify-center" style={{ width: "auto" }}>
-                    <Paper variant="outlined" className="w-[200px] h-[200px] relative shadow-lg">
+                    <Paper variant="outlined" className="w-[170px] h-[170px] relative shadow-lg">
                       <div className="absolute z-50 right-0 left-0 top-0 bottom-0"></div>
                       <img src={item.thumbnail} />
                     </Paper>
