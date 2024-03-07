@@ -33,7 +33,7 @@ import MDSnackbarIconRoot from "components/MDSnackbar/MDSnackbarIconRoot";
 // Material Dashboard 2 React context
 import { useMaterialUIController } from "context";
 
-function MDSnackbar({ color, icon, title, dateTime, content, close, bgWhite, ...rest }) {
+function MDSnackbar({ color, icon, title, dateTime, content, close, bgWhite, position, ...rest }) {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
@@ -55,13 +55,14 @@ function MDSnackbar({ color, icon, title, dateTime, content, close, bgWhite, ...
     dividerColor = true;
   }
 
+  const anchorOrigin = position.split("-");
   return (
     <Snackbar
       TransitionComponent={Fade}
       autoHideDuration={5000}
       anchorOrigin={{
-        vertical: "top",
-        horizontal: "right",
+        vertical: anchorOrigin[0],
+        horizontal: anchorOrigin[1],
       }}
       {...rest}
       action={

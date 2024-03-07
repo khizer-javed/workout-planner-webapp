@@ -2,7 +2,14 @@ import MDSnackbar from "components/MDSnackbar";
 import React, { useEffect, useState } from "react";
 
 const Notification = (props) => {
-  const { open = false, type = "success", title = "", content = "", dateTime = null } = props;
+  const {
+    open = true,
+    type = "success",
+    title = "",
+    content = "",
+    dateTime = null,
+    position = "top-right",
+  } = props;
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -40,6 +47,7 @@ const Notification = (props) => {
   }
   return (
     <MDSnackbar
+      position={position}
       color={type}
       icon={icon}
       title={title}

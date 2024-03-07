@@ -56,7 +56,6 @@ function Basic() {
       setToast(
         dispatch,
         <Notification
-          open={true}
           type="error"
           title="Something went wrong"
           content={error?.response?.data?.message || error?.message}

@@ -1,75 +1,22 @@
-import { Card, CardContent, Grid, Icon, Paper, Typography } from "@mui/material";
+import { CircularProgress, Grid, Icon, Paper, Typography } from "@mui/material";
 import MDBox from "components/MDBox";
+import MDButton from "components/MDButton";
+import Notification from "components/Notification";
+import { setToast, useMaterialUIController } from "context";
 import Footer from "examples/Footer";
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
+import { AnimatePresence, motion } from "framer-motion";
 import _ from "lodash";
-import React, { useEffect, useState } from "react";
-// import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { useEffect, useState } from "react";
 import { GridContextProvider, GridDropZone, GridItem, move, swap } from "react-grid-dnd";
-import "./styles.css";
-import ExerciseForm from "./form";
+import { useLocation, useParams } from "react-router-dom";
 import { getExercises } from "services/exercises";
-import { useParams } from "react-router-dom";
-import { setToast } from "context";
-import { useMaterialUIController } from "context";
-import Notification from "components/Notification";
-import MDButton from "components/MDButton";
-
-const exercises = [
-  {
-    id: 1,
-    title: "Inclined Bench Press",
-    description: "Upper body push and pull exercises",
-    thumbnail: "/img/chest-1.png",
-    draggable: true,
-  },
-  {
-    id: 2,
-    title: "Push ups",
-    description: "Upper body push and pull exercises",
-    thumbnail: "/img/chest-2.png",
-    draggable: true,
-  },
-  {
-    id: 3,
-    title: "Clap Push ups",
-    description: "Upper body push and pull exercises",
-    thumbnail: "/img/chest-3.png",
-    draggable: true,
-  },
-];
-
-const selectedExercises = [
-  {
-    id: 4,
-    title: "Dumbell Bench Flys",
-    description: "Upper body push and pull exercises",
-    thumbnail: "/img/chest-4.png",
-    draggable: true,
-  },
-  {
-    id: 5,
-    title: "Bench Press",
-    description: "Upper body push and pull exercises",
-    thumbnail: "/img/chest-5.png",
-    draggable: true,
-  },
-  {
-    id: 6,
-    title: "Dumbell Bench Press",
-    description: "Upper body push and pull exercises",
-    thumbnail: "/img/chest-6.png",
-    draggable: true,
-  },
-  {
-    id: 7,
-    title: "Dumbell Flys",
-    description: "Upper body push and pull exercises",
-    thumbnail: "/img/chest-7.png",
-    draggable: true,
-  },
-];
+import ExerciseForm from "./form";
+import { saveWorkoutExercises } from "services/selected-exercise";
+import Confirmation from "components/Confirmation";
+import { deleteExercise } from "services/exercises";
+import classNames from "classnames";
 
 const NoExercises = ({ onOpen }) => (
   <Grid container spacing={3}>
@@ -90,16 +37,19 @@ const NoExercises = ({ onOpen }) => (
 );
 
 const Exercises = () => {
-  const [items, setItems] = useState({
-    left: [],
-    right: [],
-  });
+  const [items, setItems] = useState({ selected: [], exercises: [] });
   const [, dispatch] = useMaterialUIController();
   const [openExerciseForm, setOpenExerciseForm] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState({});
   const [loading, setLoading] = useState(false);
   const [noExercises, setNoExercises] = useState(false);
+  const [deleteExerciseId, setDeleteExerciseId] = useState(null);
+  const [confirm, setConfirm] = useState(false);
+
   const { workoutId } = useParams();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const viewOnly = !!searchParams.get("type");
 
   useEffect(() => {
     getExercisesData();
@@ -111,19 +61,17 @@ const Exercises = () => {
       options.workoutId = workoutId;
       const response = await getExercises(options);
       setNoExercises(_.isEmpty(response.data));
-      setItems((prev) => ({
-        ...prev,
-        right: response.data,
-      }));
+      const selected = _.orderBy(
+        _.filter(response.data, (row) => !!row.SelectedExercise?.id),
+        ["sequence"],
+        ["asc"]
+      );
+      const exercises = _.filter(response.data, (row) => !row.SelectedExercise?.id);
+      setItems({ selected, exercises });
     } catch (error) {
       setToast(
         dispatch,
-        <Notification
-          open={true}
-          type="error"
-          title="Something went wrong!"
-          content={error?.message}
-        />
+        <Notification type="error" title="Something went wrong!" content={error?.message} />
       );
     }
     setLoading(false);
@@ -135,8 +83,9 @@ const Exercises = () => {
     getExercisesData();
   };
 
-  const handleOpenExerciseForm = () => {
+  const handleOpenExerciseForm = (exercise) => {
     setOpenExerciseForm(true);
+    setSelectedExercise(exercise);
   };
 
   const onChange = (sourceId, sourceIndex, targetIndex, targetId) => {
@@ -156,73 +105,215 @@ const Exercises = () => {
     });
   };
 
+  const handleClearSelected = () => {
+    const selected = _.cloneDeep(items.selected);
+    const list = [...selected, ..._.cloneDeep(items.exercises)];
+    setItems({
+      selected: [],
+      exercises: list,
+    });
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const response = await saveWorkoutExercises(workoutId, items.selected);
+      setToast(
+        dispatch,
+        <Notification type="success" title="Success!" content="Workout plan created!" />
+      );
+      getExercisesData();
+    } catch (error) {
+      setToast(
+        dispatch,
+        <Notification type="error" title="Something went wrong!" content={error?.message} />
+      );
+    }
+    setLoading(false);
+  };
+
+  const confirmDeleteExercise = (id) => {
+    setConfirm(true);
+    setDeleteExerciseId(id);
+  };
+
+  const closeConfirmDeleteExercise = () => {
+    setConfirm(false);
+    setDeleteExerciseId(null);
+  };
+
+  const deleteExerciseConfirmed = async () => {
+    const response = await deleteExercise(deleteExerciseId);
+    closeConfirmDeleteExercise();
+    getExercisesData();
+  };
+
+  const copyToClipboard = async () => {
+    await navigator.clipboard.writeText(`${window.location.href}?type=view`);
+    setToast(
+      dispatch,
+      <Notification type="info" title="Copied to clipboard!" position="bottom-right" />
+    );
+  };
+
+  const options = {};
+  if (!viewOnly) {
+    options.onAddNew = handleOpenExerciseForm;
+  }
+
   return (
     <DashboardLayout>
-      <DashboardNavbar onAddNew={handleOpenExerciseForm} />
+      <DashboardNavbar {...options} />
       {noExercises && <NoExercises onOpen={handleOpenExerciseForm} />}
       <ExerciseForm
         open={openExerciseForm}
         exercise={selectedExercise}
         onClose={closeExerciseForm}
       />
+      <Confirmation
+        open={confirm}
+        title="Delete Exercise"
+        message="Are you sure you want to delete this exercise?"
+        onClose={closeConfirmDeleteExercise}
+        onConfirm={deleteExerciseConfirmed}
+      />
 
       <MDBox py={3}>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-8 py-2">
           {!noExercises && (
-            <Typography variant="h4" className="w-[70%]">
+            <Typography variant="h5" className="flex justify-between w-full">
               Selected Exercises
+              <AnimatePresence mode="wait">
+                {!_.isEmpty(items.selected) && !viewOnly && (
+                  <div className="flex items-center justify-end gap-2">
+                    <motion.div initial={{ scale: 0.7 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                      <MDButton
+                        size="small"
+                        color="primary"
+                        variant="gradient"
+                        onClick={handleSubmit}
+                        disabled={loading}
+                      >
+                        {loading ? <CircularProgress size={10} color="white" /> : <Icon>save</Icon>}
+                        &nbsp;Save Workout Plan
+                      </MDButton>
+                    </motion.div>
+                    <motion.div initial={{ scale: 0.7 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                      <MDButton
+                        size="small"
+                        variant="outlined"
+                        color="primary"
+                        disabled={loading}
+                        onClick={copyToClipboard}
+                      >
+                        <Icon>content_copy</Icon>&nbsp;Copy Link
+                      </MDButton>
+                    </motion.div>
+                    <motion.div initial={{ scale: 0.7 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                      <MDButton
+                        disabled={loading}
+                        size="small"
+                        color="primary"
+                        variant="outlined"
+                        onClick={handleClearSelected}
+                      >
+                        Clear
+                      </MDButton>
+                    </motion.div>
+                  </div>
+                )}
+              </AnimatePresence>
             </Typography>
           )}
-          {!noExercises && (
-            <Typography variant="h4" className="w-[30%]">
-              Exercise List
+          {!noExercises && !viewOnly && (
+            <Typography variant="h5" className="w-[17%] text-start">
+              Exercises
             </Typography>
           )}
         </div>
         {!noExercises && (
           <GridContextProvider onChange={onChange}>
-            <div className="flex gap-4 w-full py-4 h-[620px] overflow-y-auto">
+            <div className="flex gap-8 w-full h-[580px] overflow-y-auto relative">
+              {viewOnly && <div className="w-full h-full absolute z-50" />}
               <GridDropZone
-                className="border border-gray-300 rounded-lg bg-white w-[70%] p-4"
-                id="left"
+                id="selected"
                 boxesPerRow={3}
-                rowHeight={220}
+                rowHeight={185}
+                className={classNames(
+                  "bg-white border border-gray-300 grid justify-center p-4 rounded-lg",
+                  viewOnly ? "w-[50%]" : "w-full"
+                )}
               >
-                {items.left.map((item, index) => (
-                  <GridItem key={item.id} className="grid justify-start w-auto">
-                    <Paper variant="outlined" className="w-[200px] h-[200px] relative shadow-lg">
-                      <div className="absolute z-50 right-0 left-0 top-0 bottom-0"></div>
+                {items.selected.map((item, index) => (
+                  <GridItem key={item.id} className="grid justify-center p-4 cursor-grab">
+                    <motion.div initial={{ scale: 0.7 }} animate={{ scale: 1 }}>
+                      <Paper variant="outlined" className="w-[170px] h-[170px] relative shadow-md">
+                        <div className="absolute z-50 right-0 left-0 top-0 bottom-0"></div>
 
-                      <div className="flex flex-col justify-between h-full">
-                        <div className="text-sm flex items-center gap-2 p-2">
-                          <b>{index + 1}.</b>
-                          <b>{item.title}</b>
-                        </div>
+                        <div className="flex flex-col justify-between h-full">
+                          <div className="text-sm flex items-center gap-2 p-2 border-b">
+                            <b className="flex justify-center items-center text-gray-500 border border-gray-500 rounded-full w-[22px]">
+                              {index + 1}
+                            </b>
+                            <b className="text-gray-500 text-xs">{item.title}</b>
+                          </div>
 
-                        <div className="grid justify-center items-center pb-2">
-                          <img src={item.thumbnail} className="h-[150px] w-fit" />
+                          <div className="grid justify-center items-center pb-2">
+                            <img src={item.thumbnail} className="h-[120px] w-fit" />
+                          </div>
                         </div>
-                      </div>
-                    </Paper>
+                      </Paper>
+                    </motion.div>
                   </GridItem>
                 ))}
               </GridDropZone>
-              <GridDropZone
-                className="bg-white border border-gray-300 flex flex-col items-center p-4 rounded-lg w-[30%] relative"
-                id="right"
-                boxesPerRow={1}
-                rowHeight={220}
-                // style={{ overflowY: "auto", overflowX: "hidden" }}
-              >
-                {items.right.map((item) => (
-                  <GridItem key={item.id} className="grid justify-center" style={{ width: "auto" }}>
-                    <Paper variant="outlined" className="w-[200px] h-[200px] relative shadow-lg">
-                      <div className="absolute z-50 right-0 left-0 top-0 bottom-0"></div>
-                      <img src={item.thumbnail} />
-                    </Paper>
-                  </GridItem>
-                ))}
-              </GridDropZone>
+
+              {!viewOnly && (
+                <GridDropZone
+                  id="exercises"
+                  boxesPerRow={1}
+                  rowHeight={185}
+                  className="flex flex-col items-start rounded-lg w-[17%] relative"
+                >
+                  {items.exercises.map((item) => (
+                    <GridItem
+                      key={item.id}
+                      className="grid justify-center"
+                      style={{ width: "auto" }}
+                    >
+                      <motion.div initial={{ scale: 0.7 }} animate={{ scale: 1 }}>
+                        <Paper variant="outlined" className="w-[170px] h-[170px] relative">
+                          <div className="absolute z-20 right-0 left-0 top-0 bottom-0 cursor-grab"></div>
+
+                          <b className="flex items-center text-xs p-2 border-b">{item.title}</b>
+
+                          <div className="grid justify-center w-full">
+                            <img src={item.thumbnail} className="h-[110px] w-fit" />
+                          </div>
+                          <div className="flex items-center justify-center border-t p-1 text-gray-400 h-[30px] z-50 absolute bottom-0 right-0 left-0">
+                            <MDButton
+                              size="small"
+                              variant="text"
+                              color="primary"
+                              onClick={() => handleOpenExerciseForm(item)}
+                            >
+                              <Icon>edit</Icon>&nbsp;Edit
+                            </MDButton>
+                            <MDButton
+                              size="small"
+                              variant="text"
+                              color="error"
+                              onClick={() => confirmDeleteExercise(item.id)}
+                            >
+                              <Icon>delete</Icon>&nbsp;Delete
+                            </MDButton>
+                          </div>
+                        </Paper>
+                      </motion.div>
+                    </GridItem>
+                  ))}
+                </GridDropZone>
+              )}
             </div>
           </GridContextProvider>
         )}
