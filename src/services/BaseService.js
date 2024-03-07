@@ -5,6 +5,8 @@ import { TOKEN } from "constants";
 
 const unauthorizedCode = [401];
 
+console.log("SERVER_API", SERVER_API);
+
 const BaseService = axios.create({
   // timeout: 60000,
   baseURL: SERVER_API,
