@@ -65,23 +65,13 @@ const ExerciseForm = (props) => {
       const response = await saveExercise(values);
       setToast(
         dispatch,
-        <Notification
-          open={true}
-          type="success"
-          title="Success!"
-          content="Exercise created successfully!"
-        />
+        <Notification type="success" title="Success!" content="Exercise created successfully!" />
       );
       handleClose();
     } catch (error) {
       setToast(
         dispatch,
-        <Notification
-          open={true}
-          type="error"
-          title="Something went wrong!"
-          content={error?.message}
-        />
+        <Notification type="error" title="Something went wrong!" content={error?.message} />
       );
     }
     setLoading(false);
