@@ -251,7 +251,10 @@ const Exercises = () => {
                     style={{ width: "auto" }}
                   >
                     <motion.div initial={{ scale: 0.7 }} animate={{ scale: 1 }}>
-                      <Paper variant="outlined" className="w-[170px] h-[170px] relative shadow-md">
+                      <Paper
+                        variant="outlined"
+                        className="w-[170px] h-[170px] relative hover:shadow-md"
+                      >
                         <div className="absolute z-50 right-0 left-0 top-0 bottom-0"></div>
 
                         <div className="flex flex-col justify-between h-full">
@@ -286,7 +289,10 @@ const Exercises = () => {
                       style={{ width: "auto" }}
                     >
                       <motion.div initial={{ scale: 0.7 }} animate={{ scale: 1 }}>
-                        <Paper variant="outlined" className="w-[170px] h-[170px] relative">
+                        <Paper
+                          variant="outlined"
+                          className="w-[170px] h-[170px] relative hover:shadow-md"
+                        >
                           <div className="absolute z-20 right-0 left-0 top-0 bottom-0 cursor-grab"></div>
 
                           <b className="flex items-center text-xs p-2 border-b">{item.title}</b>
