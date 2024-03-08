@@ -118,8 +118,8 @@ function DashboardNavbar({ absolute, light, isMini, onAddNew }) {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-      <NotificationItem icon={<Icon>person</Icon>} title={loggedInUser.username} />
-      <NotificationItem icon={<Icon>email</Icon>} title={loggedInUser.email} />
+      <NotificationItem icon={<Icon>person</Icon>} title={loggedInUser?.username} />
+      <NotificationItem icon={<Icon>email</Icon>} title={loggedInUser?.email} />
       <Divider />
       <NotificationItem icon={<Icon>logout</Icon>} title="Sign out" onClick={handleSignout} />
     </Menu>

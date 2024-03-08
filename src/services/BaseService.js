@@ -2,8 +2,10 @@ import axios from "axios";
 import { LOGGED_IN_USER } from "constants";
 import { REQUEST_HEADER_AUTH_KEY, TOKEN_TYPE, SERVER_API } from "constants";
 import { TOKEN } from "constants";
+import { Navigate } from "react-router-dom";
 
 const unauthorizedCode = [401];
+const UN_AUTHENTICATED_ENTRY_PATH = "/sign-in";
 
 console.log("SERVER_API", SERVER_API);
 
@@ -34,6 +36,7 @@ BaseService.interceptors.response.use(
     if (response && unauthorizedCode.includes(response.status)) {
       localStorage.removeItem(TOKEN);
       localStorage.removeItem(LOGGED_IN_USER);
+      return <Navigate to={UN_AUTHENTICATED_ENTRY_PATH} replace />;
     }
 
     return Promise.reject(error);

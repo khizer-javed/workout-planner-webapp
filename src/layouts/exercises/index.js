@@ -245,7 +245,11 @@ const Exercises = () => {
                 )}
               >
                 {items.selected.map((item, index) => (
-                  <GridItem key={item.id} className="grid justify-center p-4 cursor-grab">
+                  <GridItem
+                    key={item.id}
+                    className="grid justify-center p-4 cursor-grab"
+                    style={{ width: "auto" }}
+                  >
                     <motion.div initial={{ scale: 0.7 }} animate={{ scale: 1 }}>
                       <Paper variant="outlined" className="w-[170px] h-[170px] relative shadow-md">
                         <div className="absolute z-50 right-0 left-0 top-0 bottom-0"></div>
