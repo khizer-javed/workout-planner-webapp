@@ -16,11 +16,9 @@ const BaseService = axios.create({
 BaseService.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem(TOKEN);
-
     if (accessToken) {
       config.headers[REQUEST_HEADER_AUTH_KEY] = `${TOKEN_TYPE}${accessToken}`;
     }
-
     return config;
   },
   (error) => {
