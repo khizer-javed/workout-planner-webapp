@@ -24,10 +24,13 @@ import Notification from "components/Notification";
 import { LOGGED_IN_USER, TOKEN } from "constants";
 import { setToast, useMaterialUIController } from "context";
 import { userSignIn } from "services/auth";
+import { CircularProgress } from "@mui/material";
 
 function Basic() {
   const [, dispatch] = useMaterialUIController();
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const [values, setValues] = useState({
     email: null,
     password: null,
@@ -47,6 +50,7 @@ function Basic() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await userSignIn(values);
       localStorage.setItem(TOKEN, response.data.token);
@@ -62,6 +66,7 @@ function Basic() {
         />
       );
     }
+    setLoading(false);
   };
 
   return (
@@ -119,8 +124,14 @@ function Basic() {
               </MDTypography>
             </MDBox>
             <MDBox mt={4} mb={1}>
-              <MDButton variant="gradient" color="primary" fullWidth type="submit">
-                sign in
+              <MDButton
+                variant="gradient"
+                color="primary"
+                fullWidth
+                type="submit"
+                disabled={loading}
+              >
+                {loading && <CircularProgress size={10} color="white" />}&nbsp;sign in
               </MDButton>
             </MDBox>
           </MDBox>
