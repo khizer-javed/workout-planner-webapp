@@ -1,5 +1,4 @@
 import {
-  CircularProgress,
   Drawer,
   FormControl,
   FormHelperText,
@@ -11,11 +10,12 @@ import {
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
+import Loading from "components/MDLoader";
 import Notification from "components/Notification";
-import { useMaterialUIController } from "context";
-import { setToast } from "context";
+import { setToast, useMaterialUIController } from "context";
 import { navbarIconButton } from "examples/Navbars/DashboardNavbar/styles";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { saveExercise } from "services/exercises";
 
 const style = { width: 600 };
@@ -29,6 +29,7 @@ const ExerciseForm = (props) => {
   const [hover, setHover] = useState(false);
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState({});
+  const { workoutId } = useParams();
 
   useEffect(() => {
     setValues(exercise.id ? exercise : DEFAULT_VALUES);
@@ -60,14 +61,11 @@ const ExerciseForm = (props) => {
     }
     setLoading(true);
     try {
+      values.workoutId = workoutId;
       const response = await saveExercise(values);
       setToast(
         dispatch,
-        <Notification
-          type="success"
-          title="Success!"
-          content={`Exercise ${exercise?.id ? "updated" : "created"}!`}
-        />
+        <Notification type="success" title="Success!" content="Exercise created!" />
       );
       handleClose();
     } catch (error) {
@@ -109,6 +107,7 @@ const ExerciseForm = (props) => {
 
   return (
     <Drawer open={open} anchor="right" PaperProps={{ style }}>
+      <Loading loading={loading} />
       <form className="flex flex-col justify-between h-full" onSubmit={handleSubmit}>
         <Header />
         <MDBox className="flex flex-col justify-start h-full overflow-y-auto p-4 gap-4">
@@ -145,8 +144,8 @@ const ExerciseForm = (props) => {
                 hidden
                 id="upload-file"
                 name="thumbnail"
-                type="file"
                 accept="image/*"
+                type="file"
                 onChange={onFileUpload}
               />
             </MDButton>
@@ -173,7 +172,7 @@ const ExerciseForm = (props) => {
         </MDBox>
         <div className="flex justify-start items-center p-4 border-t text-white gap-2">
           <MDButton size="small" variant="gradient" color="primary" type="submit">
-            {loading && <CircularProgress size={10} color="white" />}&nbsp;Save
+            <Icon>save</Icon>&nbsp;Save
           </MDButton>
           <MDButton size="small" variant="contained" color="white" type="button" onClick={onClose}>
             Cancel

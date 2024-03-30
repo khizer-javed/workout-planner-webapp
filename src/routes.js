@@ -1,4 +1,3 @@
-
 // Material Dashboard 2 React layouts
 // import Dashboard from "layouts/dashboard";
 // import Workouts from "layouts/workouts";
@@ -17,12 +16,30 @@ import { lazy } from "react";
 const protectedRoutes = [
   {
     type: "collapse",
+    name: "Exercises",
+    key: "exercises",
+    icon: <Icon fontSize="small">directions_run</Icon>,
+    route: "/admin/exercises",
+    links: ["exercises"],
+    component: lazy(() => import("layouts/exercises/index.js")),
+  },
+  {
+    type: "collapse",
+    name: "Nutritions",
+    key: "nutritions",
+    icon: <Icon fontSize="small">brunch_dining</Icon>,
+    route: "/admin/nutritions",
+    links: ["nutritions"],
+    component: lazy(() => import("layouts/nutritions/index.js")),
+  },
+  {
+    type: "collapse",
     name: "Workouts",
     key: "workouts",
     icon: <Icon fontSize="small">fitness_center</Icon>,
-    route: "/workouts",
-    links: ['workouts', 'exercises'],
-    component: lazy(() => import('layouts/workouts/index.js'))
+    route: "/admin/workouts",
+    links: ["workouts"],
+    component: lazy(() => import("layouts/workouts/index.js")),
   },
   // {
   //   type: "collapse",
@@ -88,15 +105,22 @@ const publicRoutes = [
     name: "Sign In",
     key: "sign-in",
     icon: <Icon fontSize="small">login</Icon>,
-    route: "/sign-in",
-    component: lazy(() => import('layouts/authentication/sign-in/index.js'))
+    route: "/admin/sign-in",
+    component: lazy(() => import("layouts/authentication/sign-in/index.js")),
   },
-
-]
+  // {
+  //   type: "collapse",
+  //   name: "Home",
+  //   key: "sign-in",
+  //   icon: <Icon fontSize="small">login</Icon>,
+  //   route: "/",
+  //   component: lazy(() => import("layouts/home/index.js")),
+  // },
+];
 
 const routes = {
-  publicRoutes, protectedRoutes
-
-}
+  publicRoutes,
+  protectedRoutes,
+};
 
 export default routes;

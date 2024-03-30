@@ -1,56 +1,94 @@
-import { Card, Grid, Icon, Paper, Skeleton, Tooltip, Typography } from "@mui/material";
-import Confirmation from "components/Confirmation";
+import { Card, Grid, Icon, Input, Skeleton } from "@mui/material";
 import Loading from "components/Loading";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
-import { motion } from "framer-motion";
+import MDTypography from "components/MDTypography";
+import dayjs from "dayjs";
+import DataTable from "examples/Tables/DataTable";
 import _ from "lodash";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { deleteWorkout, getWorkouts } from "services/workouts";
+import React, { useEffect, useMemo, useState } from "react";
+import StarRatings from "react-star-ratings";
+
+const getWorkouts = async () => {
+  const data = [
+    {
+      title: "Best Biceps workout ever",
+      description: "Curl dumbbells with a slow squeeze to target your biceps for maximum growth.",
+      rating: 5,
+      exercises: 5,
+      createdAt: dayjs("02-03-2024").toDate(),
+    },
+    {
+      title: "Best Upper body chest workout ever",
+      description:
+        "Bench press variations to hit all areas of your chest for a well-rounded physique.",
+      rating: 4.5,
+      exercises: 7,
+      createdAt: dayjs("05-23-2024").toDate(),
+    },
+    {
+      title: "Thighs workout you would die for",
+      description:
+        "Compound squats and lunges to build strong, toned legs and a powerful lower body.",
+      rating: 4,
+      exercises: 6,
+      createdAt: dayjs("07-15-2024").toDate(),
+    },
+  ];
+  return { data };
+};
 
 const Loader = () => (
-  <>
-    <Grid item xs={12} md={6} lg={3}>
-      <Skeleton variant="rectangular" className="rounded-xl w-full" height={280} />
-    </Grid>
-    <Grid item xs={12} md={6} lg={3}>
-      <Skeleton variant="rectangular" className="rounded-xl w-full" height={280} />
-    </Grid>
-    <Grid item xs={12} md={6} lg={3}>
-      <Skeleton variant="rectangular" className="rounded-xl w-full" height={280} />
-    </Grid>
-    <Grid item xs={12} md={6} lg={3}>
-      <Skeleton variant="rectangular" className="rounded-xl w-full" height={280} />
-    </Grid>
-  </>
-);
-
-const NoWorkouts = ({ onOpen }) => (
-  <Grid item xs={12} md={6} lg={3}>
-    <Paper
-      variant="outlined"
-      className="rounded-xl w-full h-[280px] p-4 flex flex-col items-center justify-center gap-4"
-    >
-      <div className="flex flex-col items-center justify-center gap-4 border border-gray-300 rounded-lg p-8">
-        <Typography>Add Workouts Now!</Typography>
-        <MDButton size="small" variant="gradient" color="primary" onClick={onOpen}>
-          <Icon>add</Icon>&nbsp;Add New
-        </MDButton>
+  <MDBox pt={3}>
+    <div className="flex flex-col gap-4 p-4">
+      <div className="grid grid-cols-6 gap-4">
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full col-span-2" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
       </div>
-    </Paper>
-  </Grid>
+      <hr className="w-full" />
+      <div className="grid grid-cols-6 gap-4">
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full col-span-2" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+      </div>
+      <hr className="w-full" />
+      <div className="grid grid-cols-6 gap-4">
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full col-span-2" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+      </div>
+      <hr className="w-full" />
+      <div className="grid grid-cols-6 gap-4">
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full col-span-2" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+      </div>
+      <hr className="w-full" />
+      <div className="grid grid-cols-6 gap-4">
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full col-span-2" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+        <Skeleton variant="rectangular" className="rounded-md w-full" height={30} />
+      </div>
+    </div>
+  </MDBox>
 );
 
 const WorkoutList = (props) => {
-  const { onOpen, getData } = props;
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const { getData } = props;
   const [workouts, setWorkouts] = useState([]);
-  const [noWorkouts, setNoWorkouts] = useState(false);
-  const [hover, setHover] = useState(null);
-  const [confirm, setConfirm] = useState(false);
-  const [deleteWorkoutId, setDeleteWorkoutId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("popular");
 
   useEffect(() => {
     getWorkoutsData();
@@ -65,112 +103,158 @@ const WorkoutList = (props) => {
   const getWorkoutsData = async () => {
     setLoading(true);
     const response = await getWorkouts();
-    setNoWorkouts(_.isEmpty(response.data));
-    setWorkouts(response.data);
-    setLoading(false);
+    const data = setData(response.data);
+    setWorkouts(_.orderBy(data, ["rating"], ["desc"]));
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   };
 
-  const gotoExercises = (id) => {
-    navigate(`/exercises/${id}`);
+  const changeFilter = (value) => {
+    setFilter(value);
+    switch (value) {
+      case "popular": {
+        setWorkouts(_.orderBy(workouts, ["rating"], ["desc"]));
+        break;
+      }
+      case "recent": {
+        setWorkouts(_.orderBy(workouts, ["createdAt"], ["desc"]));
+        break;
+      }
+      case "old": {
+        setWorkouts(_.orderBy(workouts, ["createdAt"], ["asc"]));
+        break;
+      }
+      default: {
+        setWorkouts(_.orderBy(workouts, ["rating"], ["desc"]));
+        break;
+      }
+    }
   };
 
-  const editWorkout = (workout) => {
-    onOpen(workout);
+  const setData = (data = []) => {
+    return _.map(data, (row) => ({
+      ...row,
+      title: (
+        <MDTypography display="block" variant="button" fontWeight="medium" lineHeight={1}>
+          {row.title}
+        </MDTypography>
+      ),
+      description: <MDTypography variant="caption">{row.description}</MDTypography>,
+      exercises: (
+        <MDTypography component="a" href="#" variant="button" color="text" fontWeight="medium">
+          {row.exercises}
+        </MDTypography>
+      ),
+      ratingHtml: (
+        <StarRatings
+          starDimension="20px"
+          starSpacing="2px"
+          rating={row.rating}
+          starRatedColor="gold"
+          numberOfStars={5}
+          name="rating"
+        />
+      ),
+      createdAt: dayjs(row.createdAt).format("MM/DD/YYYY"),
+      action: (
+        <MDTypography
+          component="a"
+          href="#"
+          color="text"
+          className="text-gray-400 hover:text-red-400"
+        >
+          <Icon>delete_forever</Icon>
+        </MDTypography>
+      ),
+    }));
   };
 
-  const confirmDeleteWorkout = (id) => {
-    setConfirm(true);
-    setDeleteWorkoutId(id);
-  };
+  const cols = [
+    { Header: "title", accessor: "title", width: "30%", align: "left" },
+    { Header: "description", accessor: "description", align: "left" },
+    { Header: "total exercises", accessor: "exercises", align: "left" },
+    { Header: "rating", accessor: "ratingHtml", align: "left" },
+    { Header: "created", accessor: "createdAt", align: "left" },
+    { Header: "action", accessor: "action", align: "left" },
+  ];
 
-  const closeConfirmDeleteWorkout = () => {
-    setConfirm(false);
-    setDeleteWorkoutId(null);
-  };
-
-  const deleteWorkoutConfirmed = async () => {
-    const response = await deleteWorkout(deleteWorkoutId);
-
-    closeConfirmDeleteWorkout();
-    getWorkoutsData();
-  };
+  const columnHeaders = _.map(cols, "Header");
+  const columns = useMemo(() => cols, columnHeaders);
 
   return (
-    <MDBox py={3}>
-      <Confirmation
-        open={confirm}
-        title="Delete Workout"
-        message="Are you sure you want to delete this workout?"
-        onClose={closeConfirmDeleteWorkout}
-        onConfirm={deleteWorkoutConfirmed}
-      />
+    <MDBox pt={4} pb={3}>
       <Grid container spacing={3}>
-        <Loading loading={loading} customLoader={<Loader />}>
-          {noWorkouts && <NoWorkouts onOpen={onOpen} />}
-          {workouts.map((row) => (
-            <Grid
-              key={row.id}
-              item
-              xs={12}
-              md={6}
-              lg={3}
-              onMouseEnter={() => setHover(row.id)}
-              onMouseLeave={() => setHover(null)}
+        <Grid item xs={12}>
+          <Card>
+            <MDBox
+              mx={2}
+              mt={-3}
+              py={3}
+              px={2}
+              variant="gradient"
+              bgColor="primary"
+              borderRadius="lg"
+              coloredShadow="primary"
             >
-              <motion.div key={row.id} initial={{ scale: 0.8 }} animate={{ scale: 1 }}>
-                <Card className="cursor-pointer">
-                  <div
-                    onClick={() => gotoExercises(row.id)}
-                    className="flex justify-center p-4 h-[210px] border-b border-gray-300"
+              <MDTypography variant="h6" color="white">
+                Workout Listings
+              </MDTypography>
+            </MDBox>
+            <MDBox pt={3}>
+              <Grid container spacing={2} className="p-4">
+                <Grid item xl={1.2}>
+                  <MDButton
+                    className="w-full"
+                    size="large"
+                    variant={filter === "popular" ? "gradient" : "outlined"}
+                    color="primary"
+                    onClick={() => changeFilter("popular")}
                   >
-                    <img
-                      src={row.thumbnail || "/img/no-image.png"}
-                      className={`h-full w-fit ${row.thumbnail ? "" : "opacity-50"}`}
-                    />
-                  </div>
-                  <div className="p-4">
-                    <Typography
-                      gutterBottom
-                      variant="h5"
-                      component="div"
-                      className="flex items-center justify-between"
-                    >
-                      <span>{row.title}</span>
-                      <div className="flex items-center gap-2">
-                        <Tooltip title="Edit">
-                          <Icon
-                            className="text-gray-400 hover:text-blue-400"
-                            onClick={() => editWorkout(row)}
-                          >
-                            edit
-                          </Icon>
-                        </Tooltip>
-                        <Tooltip title="Delete">
-                          <Icon
-                            className="text-gray-400 hover:text-red-400"
-                            onClick={() => confirmDeleteWorkout(row.id)}
-                          >
-                            delete_forever
-                          </Icon>
-                        </Tooltip>
-                      </div>
-                    </Typography>
-
-                    <motion.div
-                      initial={{ height: 0 }}
-                      animate={{ height: hover === row.id ? "auto" : 0 }}
-                      className="overflow-hidden"
-                    >
-                      <Typography variant="caption" color="text.secondary">
-                        {row.description}
-                      </Typography>
-                    </motion.div>
-                  </div>
-                </Card>
-              </motion.div>
-            </Grid>
-          ))}
-        </Loading>
+                    Populer
+                  </MDButton>
+                </Grid>
+                <Grid item xl={1.2}>
+                  <MDButton
+                    className="w-full"
+                    size="large"
+                    variant={filter === "recent" ? "gradient" : "outlined"}
+                    color="primary"
+                    onClick={() => changeFilter("recent")}
+                  >
+                    Recent
+                  </MDButton>
+                </Grid>
+                <Grid item xl={1.2}>
+                  <MDButton
+                    className="w-full"
+                    size="large"
+                    variant={filter === "old" ? "gradient" : "outlined"}
+                    color="primary"
+                    onClick={() => changeFilter("old")}
+                  >
+                    Old
+                  </MDButton>
+                </Grid>
+              </Grid>
+            </MDBox>
+          </Card>
+        </Grid>
+        <Grid item xs={12}>
+          <Card>
+            <Loading loading={loading} customLoader={<Loader />}>
+              <MDBox>
+                <DataTable
+                  table={{ columns, rows: workouts }}
+                  isSorted={false}
+                  entriesPerPage={{ defaultValue: 10, entries: [10, 25, 50, 100] }}
+                  showTotalEntries
+                  noEndBorder
+                />
+              </MDBox>
+            </Loading>
+          </Card>
+        </Grid>
       </Grid>
     </MDBox>
   );
